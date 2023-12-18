@@ -1,9 +1,11 @@
 <template>
   <div class="background d-flex justify-content-center align-items-center vh-100">
     <div class="card-container text-center">
-      <img src="@/assets/logo.png" alt="Logo" class="card-item logo-img mb-3" />
-      <button @click="startRecording" class="card-item btn btn-primary rounded-pill mb-2">음성 인식 시작</button>
-      <button @click="stopRecording" class="card-item btn btn-danger rounded-pill">음성 인식 중단</button>
+      <img :src="logoImageSrc" alt="Logo" class="card-item logo-img mb-3" :class="{ 'animated-logo': isRecording }" />
+      <button v-if="!isRecording" @click="startRecording" class="card-item btn btn-primary rounded-pill mb-2">음성인식 시작
+      </button>
+      <button v-if="isRecording" @click="stopRecording" class="card-item stop-btn btn-danger rounded-pill">음성인식
+        중단</button>
     </div>
   </div>
 </template>
@@ -15,14 +17,15 @@ export default {
       subtitle: '',
       recognition: null,
       socket: null,
+      isRecording: false,
+      logoImageSrc: require('@/assets/logo.png'),
     };
   },
   mounted() {
-    this.setupWebSocket();
     this.setupSpeechRecognition();
   },
   methods: {
-    setupWebSocket() {
+    async setupWebSocket() {
       this.socket = new WebSocket('ws://your-backend-server/websocket-endpoint');
 
       this.socket.addEventListener('message', (event) => {
@@ -39,14 +42,18 @@ export default {
       };
     },
     sendSpeechToServer(transcript) {
-      // Send the speech data to the server through WebSocket
       this.socket.send(transcript);
     },
-    startRecording() {
+    async startRecording() {
+      await this.setupWebSocket();
       this.recognition.start();
+      this.isRecording = true;
+      console.log("Start Recording");
     },
     stopRecording() {
       this.recognition.stop();
+      this.isRecording = false;
+      this.recognition.isStarted = false;
     },
   },
 };
@@ -78,7 +85,7 @@ body {
 }
 
 .card-item {
-  margin: 15px;
+  margin: 30px;
 }
 
 .logo-img {
@@ -92,5 +99,34 @@ body {
   background-color: #337ea9;
   padding: 10px;
   color: white;
+}
+
+.stop-btn {
+  font-size: 15px;
+  border-radius: 10px;
+  background-color: #ee6b62;
+  padding: 10px;
+  color: white;
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animated-logo {
+  animation: scaleUp 1s infinite;
 }
 </style>
