@@ -2,8 +2,8 @@
   <div class="background d-flex justify-content-center align-items-center vh-100">
     <div class="card-container text-center">
       <img src="@/assets/logo.png" alt="Logo" class="card-item logo-img mb-3" />
-      <button @click="startRecording" class="card-item btn btn-primary rounded-pill mb-2">Start Recording</button>
-      <button @click="stopRecording" class="card-item btn btn-danger rounded-pill">Stop Recording</button>
+      <button @click="startRecording" class="card-item btn btn-primary rounded-pill mb-2">음성 인식 시작</button>
+      <button @click="stopRecording" class="card-item btn btn-danger rounded-pill">음성 인식 중단</button>
     </div>
   </div>
 </template>
@@ -54,7 +54,7 @@ export default {
 
 <style>
 body {
-  background-color: black;
+  background-color: #121212;
   margin: 0;
 }
 
@@ -74,11 +74,11 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: white;
+  background-color: #1e1e1e;
 }
 
 .card-item {
-  margin: 5px;
+  margin: 15px;
 }
 
 .logo-img {
@@ -86,7 +86,7 @@ body {
 }
 
 .btn {
-  font-size: 20px;
+  font-size: 25px;
   border-radius: 10px;
   background-color: #337ea9;
   color: white;
