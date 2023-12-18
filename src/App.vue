@@ -82,11 +82,12 @@ body {
 }
 
 .logo-img {
+  border-radius: 100px;
   width: 150px;
 }
 
 .btn {
-  font-size: 25px;
+  font-size: 20px;
   border-radius: 10px;
   background-color: #337ea9;
   color: white;
