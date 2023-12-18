@@ -87,9 +87,10 @@ body {
 }
 
 .btn {
-  font-size: 20px;
+  font-size: 15px;
   border-radius: 10px;
   background-color: #337ea9;
+  padding: 10px;
   color: white;
 }
 </style>
