@@ -7,6 +7,7 @@
       <button v-if="isRecording" @click="stopRecording" class="card-item stop-btn btn-danger rounded-pill">음성인식
         중단</button>
     </div>
+    <div class="subtitles">{{ recognitionResult }}</div>
   </div>
 </template>
 
@@ -41,19 +42,25 @@ export default {
 
       this.mediaRecorder.start();
       this.isRecording = true;
+
+      this.sendAudioDataInterval = setInterval(() => {
+        this.mediaRecorder.requestData();
+      }, 1000);
     },
+
     stopRecording() {
       this.isRecording = false;
       if (this.mediaRecorder.state === 'recording') {
         this.mediaRecorder.stop();
       }
+      clearInterval(this.sendAudioDataInterval);
     },
   },
   mounted() {
     this.socket = inject('socket');
     this.socket.on('recognitionResult', (result) => {
-      this.recognitionResult = result;
-      console.log(this.recognitionResult);
+      const enc = new TextDecoder("utf-8");
+      this.recognitionResult = enc.decode(result);
     });
   },
 };
@@ -128,5 +135,17 @@ body {
 
 .animated-logo {
   animation: scaleUp 1s infinite;
+}
+
+.subtitles {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #121212;
+  background-color: white;
+  font-size: 18px;
+  max-width: 200px;
+  max-height: 50px;
 }
 </style>
