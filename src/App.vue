@@ -11,50 +11,50 @@
 </template>
 
 <script>
+import { inject } from 'vue';
+
 export default {
   data() {
     return {
-      subtitle: '',
-      recognition: null,
       socket: null,
+      recognitionResult: '',
+      mediaRecorder: null,
       isRecording: false,
       logoImageSrc: require('@/assets/logo.png'),
     };
   },
-  mounted() {
-    this.setupSpeechRecognition();
-  },
   methods: {
-    async setupWebSocket() {
-      this.socket = new WebSocket('ws://your-backend-server/websocket-endpoint');
-
-      this.socket.addEventListener('message', (event) => {
-        this.subtitle = event.data;
-      });
-    },
-    setupSpeechRecognition() {
-      this.recognition = new window.webkitSpeechRecognition();
-      this.recognition.lang = 'en-US'; // Set the language accordingly
-
-      this.recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        this.sendSpeechToServer(transcript);
-      };
-    },
-    sendSpeechToServer(transcript) {
-      this.socket.send(transcript);
-    },
     async startRecording() {
-      await this.setupWebSocket();
-      this.recognition.start();
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.mediaRecorder = new MediaRecorder(stream);
+
+      this.mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          this.socket.emit('audioData', event.data);
+        }
+      };
+
+      this.mediaRecorder.onstop = () => {
+        stream.getTracks().forEach(track => track.stop());
+        this.isRecording = false;
+      };
+
+      this.mediaRecorder.start();
       this.isRecording = true;
-      console.log("Start Recording");
     },
     stopRecording() {
-      this.recognition.stop();
       this.isRecording = false;
-      this.recognition.isStarted = false;
+      if (this.mediaRecorder.state === 'recording') {
+        this.mediaRecorder.stop();
+      }
     },
+  },
+  mounted() {
+    this.socket = inject('socket');
+    this.socket.on('recognitionResult', (result) => {
+      this.recognitionResult = result;
+      console.log(this.recognitionResult);
+    });
   },
 };
 </script>
