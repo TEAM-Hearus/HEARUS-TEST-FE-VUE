@@ -7,6 +7,9 @@
       <button v-if="isRecording" @click="stopRecording" class="card-item stop-btn btn-danger rounded-pill">음성인식
         중단</button>
     </div>
+    <div class="script-container text-center">
+      <textarea ref="scrollableText" class="scrollable-text" readonly v-model="scriptDataText"></textarea>
+    </div>
     <div class="subtitles">{{ recognitionResult }}</div>
   </div>
 </template>
@@ -19,10 +22,17 @@ export default {
     return {
       socket: null,
       recognitionResult: '',
+      scriptData: ["음성 인식을 시작해보세요"],
       mediaRecorder: null,
       isRecording: false,
+      resCnt: 0,
       logoImageSrc: require('@/assets/logo.png'),
     };
+  },
+  computed: {
+    scriptDataText() {
+      return this.scriptData.join('\n');
+    },
   },
   methods: {
     async startRecording() {
@@ -41,6 +51,8 @@ export default {
       };
 
       this.mediaRecorder.start();
+      this.scriptData = [];
+      this.resCnt = 0;
       this.isRecording = true;
 
       this.sendAudioDataInterval = setInterval(() => {
@@ -50,6 +62,7 @@ export default {
 
     stopRecording() {
       this.isRecording = false;
+      this.recognitionResult = '';
       if (this.mediaRecorder.state === 'recording') {
         this.mediaRecorder.stop();
       }
@@ -59,8 +72,15 @@ export default {
   mounted() {
     this.socket = inject('socket');
     this.socket.on('recognitionResult', (result) => {
-      const enc = new TextDecoder("utf-8");
-      this.recognitionResult = enc.decode(result);
+      this.recognitionResult = result;
+
+      this.resCnt += 1;
+      this.recognitionResult = " " + this.resCnt + "번째 변환 결과 자막입니다. ";
+
+      const textArea = this.$refs.scrollableText;
+      textArea.scrollTop = textArea.scrollHeight;
+
+      this.scriptData.push(this.recognitionResult);
     });
   },
 };
@@ -78,11 +98,11 @@ body {
 
 .card-container {
   border-radius: 20px;
-  width: 30%;
+  width: 240px;
   height: 50%;
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 20%;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
@@ -91,8 +111,35 @@ body {
   background-color: #1e1e1e;
 }
 
+.script-container {
+  border-radius: 20px;
+  width: 50%;
+  height: 50%;
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #1e1e1e;
+}
+
+.scrollable-text {
+  width: 90%;
+  height: 90%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  -webkit-text-fill-color: white;
+  overflow: hidden;
+  border: none;
+  font-size: 15px;
+  background-color: #1e1e1e;
+}
+
 .card-item {
-  margin: 30px;
+  margin: 15px;
 }
 
 .logo-img {
@@ -139,13 +186,11 @@ body {
 
 .subtitles {
   position: fixed;
-  bottom: 100px;
+  bottom: 10%;
   left: 50%;
   transform: translateX(-50%);
   color: #121212;
   background-color: white;
   font-size: 18px;
-  max-width: 200px;
-  max-height: 50px;
 }
 </style>
