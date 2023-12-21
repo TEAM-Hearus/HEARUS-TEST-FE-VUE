@@ -1,0 +1,123 @@
+body {
+    background-color: #121212;
+    margin: 0;
+}
+
+.background {
+    height: 100vh;
+}
+
+.card-container {
+    border-radius: 20px;
+    width: 240px;
+    height: 50%;
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #1e1e1e;
+}
+
+.script-container {
+    border-radius: 20px;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: 50%;
+    left: 70%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #1e1e1e;
+}
+
+.scrollable-text {
+    width: 90%;
+    height: 90%;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    -webkit-text-fill-color: white;
+    border-color: #1e1e1e;
+    font-size: 15px;
+    background-color: #1e1e1e;
+
+    scrollbar-width: thin;
+    scrollbar-color: #337ea9 #1e1e1e;
+
+    resize: none;
+}
+
+.scrollable-text::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-text::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.scrollable-text::-webkit-scrollbar-thumb {
+    background-color: #337ea9;
+    border-radius: 10px;
+}
+
+.card-item {
+    margin: 15px;
+}
+
+.logo-img {
+    border-radius: 100px;
+    width: 150px;
+}
+
+.btn {
+    font-size: 15px;
+    border-radius: 10px;
+    background-color: #337ea9;
+    padding: 10px;
+    color: white;
+}
+
+.stop-btn {
+    font-size: 15px;
+    border-radius: 10px;
+    background-color: #ee6b62;
+    padding: 10px;
+    color: white;
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animated-logo {
+    animation: scaleUp 1s infinite;
+}
+
+.subtitles {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    background-color: 121212;
+    font-size: 18px;
+}
