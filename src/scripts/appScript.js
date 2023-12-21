@@ -4,6 +4,7 @@ import { inject } from 'vue';
 export default {
     data() {
         return {
+            clientToken: '',
             socket: null,
             recognitionResult: '',
             scriptData: ["음성 인식을 시작해보세요"],
@@ -25,6 +26,7 @@ export default {
 
             this.mediaRecorder.ondataavailable = (event) => {
                 if (event.data.size > 0) {
+                    this.socket.emit('clientData', this.clientToken);
                     this.socket.emit('audioData', event.data);
                 }
             };
@@ -52,8 +54,20 @@ export default {
             }
             clearInterval(this.sendAudioDataInterval);
         },
+
+        generateRandomToken(length = 10) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let token = '';
+            for (let i = 0; i < length; i++) {
+                token += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return token;
+        },
     },
     mounted() {
+        this.clientToken = this.generateRandomToken();
+        console.log(this.clientToken);
+
         this.socket = inject('socket');
         this.socket.on('recognitionResult', (result) => {
             this.recognitionResult = result;
