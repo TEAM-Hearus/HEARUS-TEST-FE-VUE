@@ -8,6 +8,7 @@ export default {
             socket: null,
             recognitionResult: '',
             scriptData: ["음성 인식을 시작해보세요"],
+            stream: null,
             mediaRecorder: null,
             isRecording: false,
             resCnt: 0,
@@ -16,13 +17,13 @@ export default {
     },
     computed: {
         scriptDataText() {
-            return this.scriptData.join('\n');
+            return this.scriptData.join(' ');
         },
     },
     methods: {
-        async startRecording() {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            this.mediaRecorder = new MediaRecorder(stream);
+        initMediaRecorder() {
+            const options = { mimeType: 'audio/webm;codecs=opus' };
+            this.mediaRecorder = new MediaRecorder(this.stream, options);
 
             this.mediaRecorder.ondataavailable = (event) => {
                 if (event.data.size > 0) {
@@ -31,19 +32,22 @@ export default {
                 }
             };
 
-            this.mediaRecorder.onstop = () => {
-                stream.getTracks().forEach(track => track.stop());
-                this.isRecording = false;
-            };
-
             this.mediaRecorder.start();
-            this.scriptData = [];
+        },
+
+        async startRecording() {
+            this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            this.initMediaRecorder();
+
+            this.scriptData = [' '];
             this.resCnt = 0;
             this.isRecording = true;
 
-            this.sendAudioDataInterval = setInterval(() => {
-                this.mediaRecorder.requestData();
-            }, 1000);
+            this.sendAudioDataInterval = setInterval(async () => {
+                await this.mediaRecorder.requestData();
+                await this.mediaRecorder.stop();
+                this.initMediaRecorder();
+            }, 2000);
         },
 
         stopRecording() {
@@ -52,6 +56,7 @@ export default {
             if (this.mediaRecorder.state === 'recording') {
                 this.mediaRecorder.stop();
             }
+            this.stream.getTracks().forEach(track => track.stop());
             clearInterval(this.sendAudioDataInterval);
         },
 
@@ -70,11 +75,11 @@ export default {
 
         this.socket = inject('socket');
         this.socket.on('recognitionResult', (result) => {
+            console.log('Recognition Result : ' + result)
             this.recognitionResult = result;
             this.resCnt += 1;
 
             if (this.isRecording) {
-                this.recognitionResult = " " + this.resCnt + "번째 변환 결과 자막입니다. ";
                 this.scriptData.push(this.recognitionResult);
             } else {
                 this.recognitionResult = '';
