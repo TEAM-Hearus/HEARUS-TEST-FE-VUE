@@ -9,7 +9,7 @@
         중단</button>
     </div>
     <div class="script-container text-center">
-      <textarea ref="scrollableText" class="scrollable-text" readonly v-model="scriptDataText"></textarea>
+      <div ref="scrollableText" class="scrollable-text" readonly v-html="formattedScriptText"></div>
     </div>
     <div class="subtitles">{{ recognitionResult }}</div>
   </div>
