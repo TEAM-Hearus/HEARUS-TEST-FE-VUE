@@ -11,18 +11,21 @@
     <div class="script-container text-center">
       <div ref="scrollableText" class="scrollable-text">
         <template v-for="(item, index) in formattedScriptText" :key="index">
-          <span v-if="item.type === 'comment'" @click="showPopup($event, item.index)"
-            :style="{ backgroundColor: '#337ea9', cursor: 'pointer', display: 'inline' }">
+          <span v-if="item.type === 'comment'" @click="showPopup($event, item.index)" :style="{
+            color: 'white', cursor: 'pointer', display: 'inline',
+            borderBottom: '2px solid #337ea9', paddingBottom: '1px'
+          }">
             {{ item.text }}
           </span>
-          <span v-else-if="item.type === 'highlight'" :style="{ backgroundColor: '#FF9900', display: 'inline' }">
+
+          <span v-else-if="item.type === 'highlight'" :style="{ color: '#FFFD38', display: 'inline' }">
             {{ item.text }}
           </span>
           <br v-else-if="item.type === 'br'" />
-          <span v-else :style="{ display: 'inline' }">
+          <span v-else :style="{ color: 'white', display: 'inline' }">
             {{ item.text }}
           </span>
-          <template v-if="item.type !== 'br'">&nbsp;</template>
+          <span v-if="item.type !== 'br'" :style="{ color: 'white', display: 'inline' }">&nbsp;</span>
         </template>
       </div>
     </div>

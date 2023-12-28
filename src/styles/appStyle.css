@@ -46,7 +46,6 @@ body {
     height: 90%;
     overflow-y: scroll;
     box-sizing: border-box;
-    -webkit-text-fill-color: white;
     border-color: #1e1e1e;
     font-size: 15px;
     background-color: #1e1e1e;
