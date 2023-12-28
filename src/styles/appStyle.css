@@ -127,3 +127,14 @@ body {
     background-color: 121212;
     font-size: 18px;
 }
+
+/* popup-box */
+.popup-box {
+    position: absolute;
+    background-color: #337ea9;
+    color: white;
+    z-index: 1000;
+    padding: 3px;
+    border-radius: 5px;
+    font-size: 15px;
+}

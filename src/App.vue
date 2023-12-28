@@ -9,8 +9,28 @@
         중단</button>
     </div>
     <div class="script-container text-center">
-      <div ref="scrollableText" class="scrollable-text" readonly v-html="formattedScriptText"></div>
+      <div ref="scrollableText" class="scrollable-text">
+        <template v-for="(item, index) in formattedScriptText" :key="index">
+          <span v-if="item.type === 'comment'" @click="showPopup($event, item.index)"
+            :style="{ backgroundColor: '#337ea9', cursor: 'pointer', display: 'inline' }">
+            {{ item.text }}
+          </span>
+          <span v-else-if="item.type === 'highlight'" :style="{ backgroundColor: '#FF9900', display: 'inline' }">
+            {{ item.text }}
+          </span>
+          <br v-else-if="item.type === 'br'" />
+          <span v-else :style="{ display: 'inline' }">
+            {{ item.text }}
+          </span>
+          <template v-if="item.type !== 'br'">&nbsp;</template>
+        </template>
+      </div>
     </div>
     <div class="subtitles">{{ recognitionResult }}</div>
+  </div>
+
+  <!-- Popup Box -->
+  <div v-if="showPopupFlag" class="popup-box" ref="popupBox" @click.self="hidePopup" :style="popupStyle">
+    {{ popupContent }}
   </div>
 </template>
