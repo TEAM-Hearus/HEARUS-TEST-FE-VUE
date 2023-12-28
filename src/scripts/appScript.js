@@ -111,7 +111,8 @@ export default {
             this.resCnt += 1;
 
             if (this.isRecording) {
-                this.scriptData.push(this.recognitionResult);
+                const tmp = [this.recognitionResult, "", ""];
+                this.scriptData.push(tmp);
             } else {
                 this.recognitionResult = '';
             }
