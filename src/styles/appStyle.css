@@ -55,6 +55,8 @@ body {
     scrollbar-color: #337ea9 #1e1e1e;
 
     resize: none;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
 .scrollable-text::-webkit-scrollbar {
