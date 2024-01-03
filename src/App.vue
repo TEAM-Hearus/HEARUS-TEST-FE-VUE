@@ -18,6 +18,7 @@
             {{ item.text }}
           </span>
 
+
           <span v-else-if="item.type === 'highlight'" :style="{ color: '#FFFD38', display: 'inline' }">
             {{ item.text }}
           </span>
