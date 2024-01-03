@@ -13,7 +13,7 @@
         <template v-for="(item, index) in formattedScriptText" :key="index">
           <span v-if="item.type === 'comment'" @click="showPopup($event, item.index)" :style="{
             color: 'white', cursor: 'pointer', display: 'inline',
-            borderBottom: '2px solid #337ea9', paddingBottom: '1px'
+            borderBottom: '3px solid #337ea9', paddingBottom: '0px'
           }">
             {{ item.text }}
           </span>

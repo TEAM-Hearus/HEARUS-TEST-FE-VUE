@@ -29,8 +29,8 @@ export default {
                 ["하이라이트", "highlight", ""],
                 ["처리가 되고", "none", ""],
                 ["", "br", ""],
-                ["추가 설명은", "none", ""],
-                ["클릭하여", "comment", "해당 키워드에 대한 추가 설명입니다"],
+                ["클릭하여", "none", ""],
+                ["추가설명을", "comment", "해당 키워드에 대한 추가 설명입니다"],
                 ["확인할 수 있습니다.", "none", ""],
                 ["", "br", ""],
                 ["", "br", ""],
@@ -86,7 +86,7 @@ export default {
                 await this.mediaRecorder.requestData();
                 await this.mediaRecorder.stop();
                 this.initMediaRecorder();
-            }, 2000);
+            }, 5000);
 
             this.sendTextDataInterval = setInterval(async () => {
                 if (this.preProcessedLen != this.scriptData.length) {
@@ -104,7 +104,7 @@ export default {
                     this.socket.emit('nlProcessing', textData);
                     this.preProcessedLen = this.scriptData.length
                 }
-            }, 5000);
+            }, 7000);
         },
 
         stopRecording() {
