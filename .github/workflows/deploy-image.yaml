@@ -25,3 +25,6 @@ jobs:
         with:
           push: true
           tags: judemin/hearus-front-vue:lastest
+          # Github Action Cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
