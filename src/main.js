@@ -4,6 +4,10 @@ import io from 'socket.io-client';
 
 const socket = io(process.env.VUE_APP_BACKEND_LOCALHOST, {
     path: '/socket',
+    // Auto Reconnect
+    reconnection: true,
+    reconnectionDelay: 5000,
+    reconnectionAttempts: Infinity,
     transports: ["websocket"],
     withCredentials: true,
 });
