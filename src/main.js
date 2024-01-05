@@ -2,7 +2,8 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import io from 'socket.io-client';
 
-const socket = io(process.env.VUE_APP_BACKEND_LOCALHOST, {
+console.log(process.env.VUE_APP_BACKEND_HOST)
+const socket = io(process.env.VUE_APP_BACKEND_HOST, {
     path: '/socket',
     // Auto Reconnect
     reconnection: true,
