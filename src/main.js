@@ -3,6 +3,7 @@ import App from './App.vue';
 import io from 'socket.io-client';
 
 const socket = io(process.env.VUE_APP_BACKEND_LOCALHOST, {
+    path: '/socket',
     transports: ["websocket"],
     withCredentials: true,
 });
