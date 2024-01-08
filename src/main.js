@@ -4,7 +4,6 @@ import io from 'socket.io-client';
 
 console.log(process.env.VUE_APP_BACKEND_HOST)
 const socket = io(process.env.VUE_APP_BACKEND_HOST, {
-    path: '/socket',
     // Auto Reconnect
     reconnection: true,
     reconnectionDelay: 5000,
