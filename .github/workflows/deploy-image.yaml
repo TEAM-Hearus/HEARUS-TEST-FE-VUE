@@ -28,9 +28,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.ORG_JUDEMIN_AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      # - name: Login to Amazon ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@v1
 
       # Build and Push Stage
       - name: Get image tag(verion)
@@ -57,7 +57,6 @@ jobs:
           ECR_REPOSITORY: hearus-front-vue
           IMAGE_TAG: ${{ steps.image.outputs.version }}
         run: |
-          echo "::set-output name=ecr_repository::$ECR_REPOSITORY"
           echo "::set-output name=image_tag::$IMAGE_TAG"
           docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
