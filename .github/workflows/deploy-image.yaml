@@ -61,5 +61,5 @@ jobs:
           echo "::set-output name=image_tag::$IMAGE_TAG"
           echo $ECR_REGISTRY
           echo $ECR_REPOSITORY
-          docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker buildx build -t $ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REPOSITORY:$IMAGE_TAG
