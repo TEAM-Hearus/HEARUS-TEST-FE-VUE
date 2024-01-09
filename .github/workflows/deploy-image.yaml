@@ -53,13 +53,11 @@ jobs:
       - name: Build, Tag, and push image to Amazon ECR
         id: image-info
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: 939992775538.dkr.ecr.ap-northeast-2.amazonaws.com
           ECR_REPOSITORY: hearus-front-vue
           IMAGE_TAG: ${{ steps.image.outputs.version }}
         run: |
           echo "::set-output name=ecr_repository::$ECR_REPOSITORY"
           echo "::set-output name=image_tag::$IMAGE_TAG"
-          echo $ECR_REGISTRY
-          echo $ECR_REPOSITORY
-          docker buildx build -t $ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REPOSITORY:$IMAGE_TAG
+          docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
