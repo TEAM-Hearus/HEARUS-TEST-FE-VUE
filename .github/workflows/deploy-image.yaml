@@ -89,5 +89,5 @@ jobs:
           cd HEARUS-IAC
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
-          git commit -am "UPDATE : Update image tag ${{ $IMAGE_TAG }}"
+          git commit -am "UPDATE : Update image tag ${{ steps.image-info.outputs.image_tag }}"
           git push -u origin main
