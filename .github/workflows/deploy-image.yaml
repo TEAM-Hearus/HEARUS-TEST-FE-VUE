@@ -45,7 +45,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ steps.image.outputs.version }}
+          tags: judemin/hearus-front-vue:${{ steps.image.outputs.version }}
           # Github Action Cache
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -54,7 +54,7 @@ jobs:
         id: image-info
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: demo-frontend
+          ECR_REPOSITORY: hearus-front-vue
           IMAGE_TAG: ${{ steps.image.outputs.version }}
         run: |
           echo "::set-output name=ecr_repository::$ECR_REPOSITORY"
