@@ -10,8 +10,9 @@ export default {
             stream: null,
             mediaRecorder: null,
             isRecording: false,
-            resCnt: 0,
+            isInit: false,
             logoImageSrc: require('@/assets/logo.png'),
+            recordingLogoImageSrc: require('@/assets/logoRecording.png'),
 
             // ["TextData", "Tag". "comment"]
             // Tag Example
@@ -19,7 +20,7 @@ export default {
             // comment=GPTAPI로부터 부가설명 br=줄바꿈
             scriptData: [],
             defaultScript: [
-                ["버튼을", "none", ""],
+                ["로고를", "none", ""],
                 ["눌러", "none", ""],
                 ["음성인식을", "none", ""],
                 ["시작해보세요", "none", ""],
@@ -29,6 +30,7 @@ export default {
                 ["하이라이트", "highlight", ""],
                 ["처리가 되고", "none", ""],
                 ["", "br", ""],
+                ["키워드를", "none", ""],
                 ["클릭하여", "none", ""],
                 ["추가설명을", "comment", "해당 키워드에 대한 추가 설명입니다"],
                 ["확인할 수 있습니다.", "none", ""],
@@ -75,11 +77,12 @@ export default {
             this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             this.initMediaRecorder();
 
-            this.scriptData = [];
-            this.scriptData = this.defaultScript;
-            this.preProcessedLen = 0;
+            if (!this.isInit) {
+                this.scriptData = [];
+                this.preProcessedLen = this.scriptData.length;
+                this.isInit = true;
+            }
 
-            this.resCnt = 0;
             this.isRecording = true;
 
             this.sendAudioDataInterval = setInterval(async () => {
@@ -173,7 +176,6 @@ export default {
         this.socket.on('recognitionResult', (result) => {
             console.log('Recognition Result: ' + result);
             this.recognitionResult = result;
-            this.resCnt += 1;
 
             if (this.isRecording && result.trim() !== '') {
                 const words = result.split(' ');
@@ -182,16 +184,28 @@ export default {
                     if (word.trim() !== '') {
                         const tmp = [word, "none", ""];
                         this.scriptData.push(tmp);
+
+                        // 줄바꿈 로직 추가
+                        if (word.endsWith('.')) {
+                            this.scriptData.push(["", "br", ""]);
+                            this.scriptData.push(["", "br", ""]);
+                        }
                     }
                 });
             } else {
                 this.recognitionResult = '';
             }
 
-            const textArea = this.$refs.scrollableText;
-            if (textArea.scrollHeight) {
-                textArea.scrollTop = textArea.scrollHeight;
-            }
+            this.$nextTick(() => {
+                const textArea = this.$refs.scrollableText;
+                if (!textArea) {
+                    console.error("scrollableText ref is not found");
+                    return;
+                }
+
+                if (textArea.scrollHeight)
+                    textArea.scrollTop = textArea.scrollHeight;
+            });
         });
 
 
