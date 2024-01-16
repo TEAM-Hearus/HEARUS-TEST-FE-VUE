@@ -177,7 +177,7 @@ export default {
             console.log('Recognition Result: ' + result);
             this.recognitionResult = result;
 
-            if (this.isRecording && result.trim() !== '') {
+            if (result.trim() !== '') {
                 const words = result.split(' ');
 
                 words.forEach(word => {
