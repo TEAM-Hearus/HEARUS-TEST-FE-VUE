@@ -1,0 +1,1 @@
+window.VUE_APP_K8S="/"
