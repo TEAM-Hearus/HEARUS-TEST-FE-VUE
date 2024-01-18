@@ -175,9 +175,11 @@ export default {
         this.socket = inject('socket');
         this.socket.on('recognitionResult', (result) => {
             console.log('Recognition Result: ' + result);
-            this.recognitionResult = result;
 
-            if (this.isRecording && result.trim() !== '') {
+            if (this.isRecording)
+                this.recognitionResult = result;
+
+            if (result.trim() !== '') {
                 const words = result.split(' ');
 
                 words.forEach(word => {
