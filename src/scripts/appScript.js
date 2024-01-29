@@ -37,6 +37,7 @@ export default {
                 ["", "br", ""],
                 ["", "br", ""],
             ],
+            lineCount: 0,
             preProcessedLen: 0,
 
             // Popup Data properties
@@ -83,6 +84,7 @@ export default {
                 this.isInit = true;
             }
 
+            this.lineCount = 0;
             this.isRecording = true;
 
             this.sendAudioDataInterval = setInterval(async () => {
@@ -93,21 +95,26 @@ export default {
 
             this.sendTextDataInterval = setInterval(async () => {
                 if (this.preProcessedLen != this.scriptData.length) {
-                    const arrStart = this.preProcessedLen;
-                    const arrEnd = this.scriptData.length;
-                    const unProcessedText = this.scriptData.slice(arrStart, arrEnd);
-                    const sumText = unProcessedText.map(data => { return data[0]; }).join(' ');
+                    // 데이터를 잘라서 NLP 모델에 보내는 로직
+                    if (this.lineCount >= 0) {
+                        const arrStart = this.preProcessedLen;
+                        const arrEnd = this.scriptData.length;
+                        const unProcessedText = this.scriptData.slice(arrStart, arrEnd);
+                        const sumText = unProcessedText.map(data => { return data[0]; }).join(' ');
 
-                    const textData = JSON.stringify({
-                        arrStart: arrStart,
-                        arrEnd: arrEnd,
-                        unProcessedText: unProcessedText,
-                        sumText: sumText
-                    });
-                    this.socket.emit('nlProcessing', textData);
-                    this.preProcessedLen = this.scriptData.length
+                        const textData = JSON.stringify({
+                            arrStart: arrStart,
+                            arrEnd: arrEnd,
+                            unProcessedText: unProcessedText,
+                            sumText: sumText
+                        });
+
+                        this.socket.emit('nlProcessing', textData);
+                        this.lineCount = 0;
+                        this.preProcessedLen = this.scriptData.length
+                    }
                 }
-            }, 7000);
+            }, 5000);
         },
 
         stopRecording() {
@@ -189,6 +196,7 @@ export default {
 
                         // 줄바꿈 로직 추가
                         if (word.endsWith('.')) {
+                            this.lineCount++;
                             this.scriptData.push(["", "br", ""]);
                             this.scriptData.push(["", "br", ""]);
                         }
