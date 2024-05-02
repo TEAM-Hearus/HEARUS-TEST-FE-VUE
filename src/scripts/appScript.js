@@ -91,28 +91,28 @@ export default {
                 await this.mediaRecorder.requestData();
                 await this.mediaRecorder.stop();
                 this.initMediaRecorder();
-            }, 5000);
+            }, 500);
 
             this.sendTextDataInterval = setInterval(async () => {
                 if (this.preProcessedLen != this.scriptData.length) {
                     // 데이터를 잘라서 NLP 모델에 보내는 로직
-                    if (this.lineCount >= 0) {
-                        const arrStart = this.preProcessedLen;
-                        const arrEnd = this.scriptData.length;
-                        const unProcessedText = this.scriptData.slice(arrStart, arrEnd);
-                        const sumText = unProcessedText.map(data => { return data[0]; }).join(' ');
+                    // if (this.lineCount >= 7) {
+                    //     const arrStart = this.preProcessedLen;
+                    //     const arrEnd = this.scriptData.length;
+                    //     const unProcessedText = this.scriptData.slice(arrStart, arrEnd);
+                    //     const sumText = unProcessedText.map(data => { return data[0]; }).join(' ');
 
-                        const textData = JSON.stringify({
-                            arrStart: arrStart,
-                            arrEnd: arrEnd,
-                            unProcessedText: unProcessedText,
-                            sumText: sumText
-                        });
+                    //     const textData = JSON.stringify({
+                    //         arrStart: arrStart,
+                    //         arrEnd: arrEnd,
+                    //         unProcessedText: unProcessedText,
+                    //         sumText: sumText
+                    //     });
 
-                        this.socket.emit('nlProcessing', textData);
-                        this.lineCount = 0;
-                        this.preProcessedLen = this.scriptData.length
-                    }
+                    //     this.socket.emit('nlProcessing', textData);
+                    //     this.lineCount = 0;
+                    //     this.preProcessedLen = this.scriptData.length
+                    // }
                 }
             }, 5000);
         },
@@ -180,8 +180,8 @@ export default {
         console.log(this.clientToken);
 
         this.socket = inject('socket');
-        this.socket.on('recognitionResult', (result) => {
-            console.log('Recognition Result: ' + result);
+        this.socket.on('transitionResult', (result) => {
+            console.log('Transition Result: ' + result);
 
             if (this.isRecording)
                 this.recognitionResult = result;
@@ -213,7 +213,7 @@ export default {
                     return;
                 }
 
-                if (textArea.scrollHeight)
+                if (textArea.scrollHeight && this.isRecording)
                     textArea.scrollTop = textArea.scrollHeight;
             });
         });
