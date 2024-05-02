@@ -13,7 +13,8 @@
     "socket.io-client": "^3.0.10",
     "vue": "^3.3.12",
     "vue-socket.io": "^3.0.10",
-    "webrtc-adapter": "^8.2.3"
+    "webrtc-adapter": "^8.2.3",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
