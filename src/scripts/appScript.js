@@ -66,16 +66,8 @@ export default {
 
             this.mediaRecorder.ondataavailable = (event) => {
                 if (event.data.size > 0) {
-                    // Blob 데이터를 byte[] 형태로 변환
-                    const fileReader = new FileReader();
-                    fileReader.onload = (e) => {
-                        const byteArray = new Uint8Array(e.target.result);
-                        // Spring Boot 서버로 byte[] 데이터 전송
-                        this.socket.emit('transcription', byteArray);
-                        console.log(byteArray);
-                        console.log('Byte array size:', byteArray.length);
-                    };
-                    fileReader.readAsArrayBuffer(event.data);
+                    this.socket.emit('transcription', "Hello World");
+                    console.log(event.data.type);
                 }
             };
 
