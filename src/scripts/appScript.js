@@ -65,9 +65,24 @@ export default {
             this.mediaRecorder = new MediaRecorder(this.stream, options);
 
             this.mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    this.socket.emit('transcription', "Hello World");
-                    console.log(event.data.type);
+                if (event.data.size > 0 && event.data != null) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const dataView = new DataView(e.target.result);
+                        const byteLength = dataView.byteLength;
+                        const byteArray = new Uint8Array(byteLength);
+            
+                        for (let i = 0; i < byteLength; i++) {
+                            byteArray[i] = dataView.getUint8(i);
+                        }
+            
+                        if (byteArray.length > 0) {
+                            const base64EncodedData = btoa(String.fromCharCode(...byteArray));
+                            const serializedData = JSON.stringify({ data: base64EncodedData });
+                            this.socket.emit('transcription', serializedData);
+                        }
+                    };
+                    reader.readAsArrayBuffer(event.data);
                 }
             };
 
