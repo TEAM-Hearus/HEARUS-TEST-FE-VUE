@@ -66,25 +66,22 @@ export default {
 
             this.mediaRecorder.ondataavailable = (event) => {
                 if (event.data.size > 0 && event.data != null) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const dataView = new DataView(e.target.result);
-                        const byteLength = dataView.byteLength;
-                        const byteArray = new Uint8Array(byteLength);
-            
-                        for (let i = 0; i < byteLength; i++) {
-                            byteArray[i] = dataView.getUint8(i);
-                        }
-            
-                        if (byteArray.length > 0) {
-                            const base64EncodedData = btoa(String.fromCharCode(...byteArray));
-                            const serializedData = JSON.stringify({ data: base64EncodedData });
-                            this.socket.emit('transcription', serializedData);
-                        }
-                    };
-                    reader.readAsArrayBuffer(event.data);
+                  const reader = new FileReader();
+                  reader.onload = (e) => {
+                    // Access ArrayBuffer directly
+                    const arrayBuffer = e.target.result;
+              
+                    if (arrayBuffer) {
+                      // Use window.btoa for browser compatibility
+                      const base64EncodedData = window.btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+                      this.socket.emit('transcription', base64EncodedData);
+                    } else {
+                      console.error("[mediaRecorder]-[ondataavailable] ArrayBuffer is null");
+                    }
+                  };
+                  reader.readAsArrayBuffer(event.data);
                 }
-            };
+              };              
 
             this.mediaRecorder.start();
         },
