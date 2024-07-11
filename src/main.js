@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import io from 'socket.io-client';
+import router from './router/router.js';
 
 console.log("process.env.VUE_APP_BACKEND_HOST : ", process.env.VUE_APP_BACKEND_HOST)
 console.log("process.env.VUE_APP_SOCKETIO_HOST : ", process.env.VUE_APP_SOCKETIO_HOST)
@@ -22,8 +23,13 @@ const socket = io(socketUrl, {
   reconnectionAttempts: Infinity
 });
 
+socket.on('connect', () => {
+  const lectureId = '668cceb8ebef2b4462de0fb5';
+  socket.emit('lectureId', lectureId);
+});
 
 const app = createApp(App);
+app.use(router);
 app.provide('socket', socket);
 app.config.productionTip = false;
 
